@@ -1,22 +1,25 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   application:
     name: BANKING-SYSTEM
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/banking_db
-    username: root
-    password: Ramesh@2002
+    url: ${DB_URL:jdbc:mysql://localhost:3306/banking_db}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:Ramesh@2002}
   jpa:
     hibernate:
       ddl-auto: update
     generate-ddl: true
-    show-sql: true
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
 
 jwt:
-  secret: bankingsystemsecretkey1234567890abcdefghij
+  secret: ${JWT_SECRET:bankingsystemsecretkey1234567890abcdefghij}
   expiration: 86400000
 
 springdoc:
