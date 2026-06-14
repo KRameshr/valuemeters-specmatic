@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <title>Specmatic Report</title>
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+
+<body class="flex flex-col min-h-screen gap-3 p-4 pb-0 font-mono">
+    <header class="border-2 shadow-md print:shadow-none">
+        <div class="flex items-center justify-between p-4" id="banner">
+            <img class="w-64 h-14" src="assets/specmatic-logo.svg" alt="Specmatic">
+            <h2 class="text-3xl font-medium font-roboto">Contract Test Results</h2>
+            <div class="w-64 text-right print:hidden">
+                <button class="p-2 duration-100 border-2 active:scale-105 hover:border-blue-500" id="downloadButton">
+                    <img src="assets/download.svg" alt="Download Button" class="size-8">
+                </button>
+            </div>
+        </div>
+        <div id="summary" class="flex items-center justify-between gap-5 p-1 border-2 bg-rejected" data-panel="table">
+            <div class="flex flex-col ml-2 print:items-center print:gap-2" id="totalCoverage">
+                <p class="text-black/50 whitespace-nowrap">API Coverage</p>
+                <span class="text-center text-3xl font-bold rejected">56%</span>
+            </div>
+            <ol id="results" class="relative flex items-center justify-center flex-1 px-2 print:flex-wrap gap-x-5 *:min-w-44 print:*:min-w-0">
+                <li class="flex items-center justify-center gap-2 cursor-pointer group shadow-md print:shadow-none h-12" data-type="Success">
+                    <img src="assets/check-badge.svg" alt="success" class="size-8">
+                    <p class="group-hover:text-green-500">Success: <span>0</span>
+                        <span class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-green-500"></span>
+                    </p>
+                </li>
+                <li class="flex items-center justify-center gap-2 cursor-pointer group shadow-md print:shadow-none h-12" data-type="Failed">
+                    <img src="assets/x-circle.svg" alt="failed" class="size-8">
+                    <p class="group-hover:text-red-500">Failed: <span>20</span>
+                        <span class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-red-500"></span>
+                    </p>
+                </li>
+                <li class="flex items-center justify-center gap-2 cursor-pointer group shadow-md print:shadow-none h-12" data-type="Error">
+                    <img src="assets/exclamation-triangle.svg" alt="errors" class="size-8">
+                    <p class="group-hover:text-red-500">Errors: <span>0</span>
+                        <span class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-red-500"></span>
+                    </p>
+                </li>
+                 <li class="flex items-center justify-center gap-2 cursor-pointer group shadow-md print:shadow-none h-12" data-type="Skipped">
+                    <img src="assets/blocked.svg" alt="skipped" class="size-8">
+                    <p class="group-hover:text-yellow-500">Skipped: <span>0</span>
+                        <span class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-yellow-500"></span>
+                    </p>
+                </li>
+                <li class="flex items-center justify-center gap-2 cursor-pointer group shadow-md print:shadow-none h-12 button-pressed" id="all" data-type="All">
+                    <img src="assets/clipboard-document-list.svg" alt="total-tests" class="size-8">
+                    <p class="group-hover:text-blue-500">Total: <span>20</span>
+                        <span class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-blue-500"></span>
+                    </p>
+                </li>
+                <!-- <li class="flex items-center justify-center gap-2" id="total-time">
+                    <img src="assets/clock.svg" alt="total-time" class="size-8">
+                    <p>Time: 7ms</p>
+                </li> -->
+            </ol>
+            <div id="badge" class="relative flex items-center justify-center">
+                <img src="assets/badge.svg" class="size-18 rejected" alt="badge">
+                <img src="assets/mark-rejected.svg" alt="mark" class="absolute inset-0 z-10 mx-auto my-auto size-14">
+            </div>
+        </div>
+        <div id="additional-info" class="p-2 text-sm">
+            <ol class="flex justify-between">
+                <li>
+                    <p>Actuator: <span class="font-semibold">Enabled</span></p>
+                </li>
+                
+            </ol>
+        </div>
+    </header>
+    <main class="flex items-start flex-1 overflow-hidden border-t-2 shadow-md group print:shadow-none print:overflow-visible" data-item="table">
+        <table id="reports" class="font-mono transition-transform -translate-x-full group-data-[item=table]:translate-x-0 duration-700 min-w-full" data-filter="All">
+            <thead>
+                <tr class="font-bold">
+                    <td>Coverage</td>
+                    <td colspan="2">Path</td>
+                    <td colspan="1">Method</td>
+                    <td colspan="1">Response</td>
+                    <td>Exercised</td>
+                    <td>Result</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-type="Failed" data-color="red" data-result="not implemented" data-coverage="50">
+                    <td rowspan="2">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="2">
+                        /account/user/{userId}
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="1">
+                        GET
+                    </td>
+                    <td colspan="1">200</td>
+                    <td>1</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            not implemented
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="missing in spec" data-coverage="50">
+                    <td rowspan="2" class="hidden">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="2" class="hidden">
+                        /account/user/{userId}
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="1" class="hidden">
+                        GET
+                    </td>
+                    <td colspan="1">400</td>
+                    <td>0</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            missing in spec
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="not implemented" data-coverage="50">
+                    <td rowspan="2">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="2">
+                        /account/{accountNumber}
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="1">
+                        GET
+                    </td>
+                    <td colspan="1">200</td>
+                    <td>1</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            not implemented
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="missing in spec" data-coverage="50">
+                    <td rowspan="2" class="hidden">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="2" class="hidden">
+                        /account/{accountNumber}
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="1" class="hidden">
+                        GET
+                    </td>
+                    <td colspan="1">400</td>
+                    <td>0</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            missing in spec
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="not implemented" data-coverage="50">
+                    <td rowspan="2">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="2">
+                        /auth/login
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="1">
+                        POST
+                    </td>
+                    <td colspan="1">200</td>
+                    <td>2</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            not implemented
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="missing in spec" data-coverage="50">
+                    <td rowspan="2" class="hidden">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="2" class="hidden">
+                        /auth/login
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="1" class="hidden">
+                        POST
+                    </td>
+                    <td colspan="1">400</td>
+                    <td>0</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            missing in spec
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="not implemented" data-coverage="50">
+                    <td rowspan="2">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="2">
+                        /auth/register
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="1">
+                        POST
+                    </td>
+                    <td colspan="1">200</td>
+                    <td>2</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            not implemented
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="missing in spec" data-coverage="50">
+                    <td rowspan="2" class="hidden">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="2" class="hidden">
+                        /auth/register
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="1" class="hidden">
+                        POST
+                    </td>
+                    <td colspan="1">400</td>
+                    <td>0</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            missing in spec
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="not implemented" data-coverage="50">
+                    <td rowspan="2">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="2">
+                        /budget/get/{accountId}
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="1">
+                        GET
+                    </td>
+                    <td colspan="1">200</td>
+                    <td>1</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            not implemented
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="missing in spec" data-coverage="50">
+                    <td rowspan="2" class="hidden">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="2" class="hidden">
+                        /budget/get/{accountId}
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="1" class="hidden">
+                        GET
+                    </td>
+                    <td colspan="1">400</td>
+                    <td>0</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            missing in spec
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="not implemented" data-coverage="50">
+                    <td rowspan="2">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="2">
+                        /budget/set/{accountId}
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="1">
+                        POST
+                    </td>
+                    <td colspan="1">200</td>
+                    <td>2</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            not implemented
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="missing in spec" data-coverage="50">
+                    <td rowspan="2" class="hidden">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="2" class="hidden">
+                        /budget/set/{accountId}
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="1" class="hidden">
+                        POST
+                    </td>
+                    <td colspan="1">400</td>
+                    <td>0</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            missing in spec
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="not implemented" data-coverage="50">
+                    <td rowspan="2">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="2">
+                        /expense/add/{accountId}
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="1">
+                        POST
+                    </td>
+                    <td colspan="1">200</td>
+                    <td>2</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            not implemented
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="missing in spec" data-coverage="50">
+                    <td rowspan="2" class="hidden">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="2" class="hidden">
+                        /expense/add/{accountId}
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="1" class="hidden">
+                        POST
+                    </td>
+                    <td colspan="1">400</td>
+                    <td>0</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            missing in spec
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="not implemented" data-coverage="100">
+                    <td rowspan="1">
+                        100%
+                    </td>
+                    <td rowspan="1" data-main="true" colspan="2">
+                        /expense/list/{accountId}
+                    </td>
+                    <td rowspan="1" data-main="true" colspan="1">
+                        GET
+                    </td>
+                    <td colspan="1">200</td>
+                    <td>1</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            not implemented
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="not implemented" data-coverage="100">
+                    <td rowspan="1">
+                        100%
+                    </td>
+                    <td rowspan="1" data-main="true" colspan="2">
+                        /expense/summary/{accountId}
+                    </td>
+                    <td rowspan="1" data-main="true" colspan="1">
+                        GET
+                    </td>
+                    <td colspan="1">200</td>
+                    <td>1</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            not implemented
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="not implemented" data-coverage="50">
+                    <td rowspan="2">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="2">
+                        /transaction/deposit/{accountId}
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="1">
+                        POST
+                    </td>
+                    <td colspan="1">200</td>
+                    <td>2</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            not implemented
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="missing in spec" data-coverage="50">
+                    <td rowspan="2" class="hidden">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="2" class="hidden">
+                        /transaction/deposit/{accountId}
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="1" class="hidden">
+                        POST
+                    </td>
+                    <td colspan="1">400</td>
+                    <td>0</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            missing in spec
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="not implemented" data-coverage="100">
+                    <td rowspan="1">
+                        100%
+                    </td>
+                    <td rowspan="1" data-main="true" colspan="2">
+                        /transaction/history/{accountId}
+                    </td>
+                    <td rowspan="1" data-main="true" colspan="1">
+                        GET
+                    </td>
+                    <td colspan="1">200</td>
+                    <td>1</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            not implemented
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="not implemented" data-coverage="50">
+                    <td rowspan="2">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="2">
+                        /transaction/transfer/{fromAccountId}
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="1">
+                        POST
+                    </td>
+                    <td colspan="1">200</td>
+                    <td>2</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            not implemented
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="missing in spec" data-coverage="50">
+                    <td rowspan="2" class="hidden">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="2" class="hidden">
+                        /transaction/transfer/{fromAccountId}
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="1" class="hidden">
+                        POST
+                    </td>
+                    <td colspan="1">400</td>
+                    <td>0</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            missing in spec
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="not implemented" data-coverage="50">
+                    <td rowspan="2">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="2">
+                        /transaction/withdraw/{accountId}
+                    </td>
+                    <td rowspan="2" data-main="true" colspan="1">
+                        POST
+                    </td>
+                    <td colspan="1">200</td>
+                    <td>2</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            not implemented
+                        </span>
+                    </td>
+                </tr>
+                <tr data-type="Failed" data-color="red" data-result="missing in spec" data-coverage="50">
+                    <td rowspan="2" class="hidden">
+                        50%
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="2" class="hidden">
+                        /transaction/withdraw/{accountId}
+                    </td>
+                    <td rowspan="2" data-main="false" colspan="1" class="hidden">
+                        POST
+                    </td>
+                    <td colspan="1">400</td>
+                    <td>0</td>
+                    <td>
+                        <span class="capitalize px-4 py-1.5 font-medium rounded-lg whitespace-nowrap bg-red-300">
+                            missing in spec
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="details" class="transition-transform translate-x-full group-data-[item=details]:-translate-x-full duration-700 min-w-full p-2 print:hidden">
+            <div class="flex gap-3 top-2" id="response-details">
+                <button id="go-back" class="px-6 py-2 text-white duration-500 bg-blue-500 rounded-md hover:bg-blue-700 group">
+                    <span class="text-lg">&larr;</span>
+                    <span>Go Back</span>
+                </button>
+                <ul id="response-summary" class="flex items-center justify-between flex-1 px-10 gap-10 px-10 border-2 border-red-300 rounded-md font-roboto">
+                </ul>
+            </div>
+            <ul id="scenarios" class="flex flex-col gap-3 py-2 mt-3">
+            </ul>
+        </div>
+    </main>
+    <footer class="flex items-center justify-between p-2 text-center print:flex-col print:gap-2">
+        <p class="w-96 text-left print:text-center">Generated On: <span class="font-mono">Sat, Jun 13 2026 12:41AM</span></p>
+        <div class="flex items-center gap-2">
+            <span class="whitespace-nowrap">Powered By</span>
+            <img src="assets/specmatic-logo.svg" alt="Specmatic" class="w-48 mb-2">
+            <p class="font-light font-roboto">[2.0.18]</p>
+        </div>
+        <div class="flex items-center justify-end gap-1 w-96 print:justify-center">
+            <p>Copyright</p>
+            <p class="text-3xl">&copy;</p>
+            <p>All Rights Reserved</p>
+        </div>
+    </footer>
+    <script id="json-data"  type="application/json">
+        {"/account/user/{userId}":{"GET":{"200":[{"name":" Scenario: GET /account/user/(userId:number) -> 200","baseUrl":"http://localhost:8080","duration":1,"testResult":"NotImplemented","valid":true,"wip":false,"request":"GET /account/user/793\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: NOT SENT\n\n","requestTime":1781291477452,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:17.4507983\",\n    \"status\": 400\n}","responseTime":1781291477453,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: GET /account/user/(userId:number) -> 200 has FAILED\nIn scenario \"Get account by user ID. Response: OK\"\r\nAPI: GET /account/user/(userId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}],"400":[{"name":" Scenario: GET /account/user/(userId:number) -> 200","baseUrl":"http://localhost:8080","duration":1,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"GET /account/user/793\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: NOT SENT\n\n","requestTime":1781291477452,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:17.4507983\",\n    \"status\": 400\n}","responseTime":1781291477453,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: GET /account/user/(userId:number) -> 200 has FAILED\nIn scenario \"Get account by user ID. Response: OK\"\r\nAPI: GET /account/user/(userId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}]}},"/account/{accountNumber}":{"GET":{"200":[{"name":" Scenario: GET /account/(accountNumber:string) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"NotImplemented","valid":true,"wip":false,"request":"GET /account/GPCXS\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: NOT SENT\n\n","requestTime":1781291477424,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:17.4204937\",\n    \"status\": 400\n}","responseTime":1781291477424,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: GET /account/(accountNumber:string) -> 200 has FAILED\nIn scenario \"Get account by account number. Response: OK\"\r\nAPI: GET /account/(accountNumber:string) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}],"400":[{"name":" Scenario: GET /account/(accountNumber:string) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"GET /account/GPCXS\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: NOT SENT\n\n","requestTime":1781291477424,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:17.4204937\",\n    \"status\": 400\n}","responseTime":1781291477424,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: GET /account/(accountNumber:string) -> 200 has FAILED\nIn scenario \"Get account by account number. Response: OK\"\r\nAPI: GET /account/(accountNumber:string) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}]}},"/auth/login":{"POST":{"200":[{"name":" Scenario: POST /auth/login -> 200","baseUrl":"http://localhost:8080","duration":1,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /auth/login\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"email\": \"GNHMP\",\n    \"password\": \"LUSWF\"\n}","requestTime":1781291477156,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"User not found!\",\n    \"timestamp\": \"2026-06-13T00:41:17.1532836\",\n    \"status\": 400\n}","responseTime":1781291477157,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /auth/login -> 200 has FAILED\nIn scenario \"Login and get JWT token. Response: OK\"\r\nAPI: POST /auth/login -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"},{"name":" Scenario: POST /auth/login -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /auth/login\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{}","requestTime":1781291477190,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"User not found!\",\n    \"timestamp\": \"2026-06-13T00:41:17.1883881\",\n    \"status\": 400\n}","responseTime":1781291477190,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /auth/login -> 200 has FAILED\nIn scenario \"Login and get JWT token. Response: OK\"\r\nAPI: POST /auth/login -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}],"400":[{"name":" Scenario: POST /auth/login -> 200","baseUrl":"http://localhost:8080","duration":1,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"POST /auth/login\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"email\": \"GNHMP\",\n    \"password\": \"LUSWF\"\n}","requestTime":1781291477156,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"User not found!\",\n    \"timestamp\": \"2026-06-13T00:41:17.1532836\",\n    \"status\": 400\n}","responseTime":1781291477157,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /auth/login -> 200 has FAILED\nIn scenario \"Login and get JWT token. Response: OK\"\r\nAPI: POST /auth/login -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"},{"name":" Scenario: POST /auth/login -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"POST /auth/login\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{}","requestTime":1781291477190,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"User not found!\",\n    \"timestamp\": \"2026-06-13T00:41:17.1883881\",\n    \"status\": 400\n}","responseTime":1781291477190,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /auth/login -> 200 has FAILED\nIn scenario \"Login and get JWT token. Response: OK\"\r\nAPI: POST /auth/login -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}]}},"/auth/register":{"POST":{"200":[{"name":" Scenario: POST /auth/register -> 200","baseUrl":"http://localhost:8080","duration":1,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /auth/register\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"name\": \"OPIMO\",\n    \"email\": \"IHLDF\",\n    \"password\": \"WUJTM\"\n}","requestTime":1781291476500,"response":"200 OK\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: text/plain;charset=UTF-8\nContent-Length: 57\nDate: Fri, 12 Jun 2026 19:11:16 GMT\nKeep-Alive: timeout=60\nConnection: keep-alive\n\nUser registered successfully! Account Number: ACCCF587FE7","responseTime":1781291476501,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /auth/register -> 200 has FAILED\nIn scenario \"Register new user. Response: OK\"\r\nAPI: POST /auth/register -> 200\r\n\r\n  >> RESPONSE.HEADERS.Content-Type\n  \n     Contract expected */* but response contained text/plain;charset=UTF-8","htmlResult":"Failed"},{"name":" Scenario: POST /auth/register -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /auth/register\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{}","requestTime":1781291477117,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"could not execute statement [Column 'email' cannot be null] [insert into users (email,name,password,role) values (?,?,?,?)]; SQL [insert into users (email,name,password,role) values (?,?,?,?)]; constraint [email]\",\n    \"timestamp\": \"2026-06-13T00:41:17.1142393\",\n    \"status\": 400\n}","responseTime":1781291477117,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /auth/register -> 200 has FAILED\nIn scenario \"Register new user. Response: OK\"\r\nAPI: POST /auth/register -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}],"400":[{"name":" Scenario: POST /auth/register -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"POST /auth/register\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{}","requestTime":1781291477117,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"could not execute statement [Column 'email' cannot be null] [insert into users (email,name,password,role) values (?,?,?,?)]; SQL [insert into users (email,name,password,role) values (?,?,?,?)]; constraint [email]\",\n    \"timestamp\": \"2026-06-13T00:41:17.1142393\",\n    \"status\": 400\n}","responseTime":1781291477117,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /auth/register -> 200 has FAILED\nIn scenario \"Register new user. Response: OK\"\r\nAPI: POST /auth/register -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}]}},"/budget/get/{accountId}":{"GET":{"200":[{"name":" Scenario: GET /budget/get/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"NotImplemented","valid":true,"wip":false,"request":"GET /budget/get/792\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: NOT SENT\n\n","requestTime":1781291477388,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Budget not set!\",\n    \"timestamp\": \"2026-06-13T00:41:17.3859518\",\n    \"status\": 400\n}","responseTime":1781291477388,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: GET /budget/get/(accountId:number) -> 200 has FAILED\nIn scenario \"Get budget limits. Response: OK\"\r\nAPI: GET /budget/get/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}],"400":[{"name":" Scenario: GET /budget/get/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"GET /budget/get/792\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: NOT SENT\n\n","requestTime":1781291477388,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Budget not set!\",\n    \"timestamp\": \"2026-06-13T00:41:17.3859518\",\n    \"status\": 400\n}","responseTime":1781291477388,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: GET /budget/get/(accountId:number) -> 200 has FAILED\nIn scenario \"Get budget limits. Response: OK\"\r\nAPI: GET /budget/get/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}]}},"/budget/set/{accountId}":{"POST":{"200":[{"name":" Scenario: POST /budget/set/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":1,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /budget/set/112\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"dailyLimit\": 793.0,\n    \"weeklyLimit\": 258.0,\n    \"monthlyLimit\": 454.0\n}","requestTime":1781291475566,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.5627928\",\n    \"status\": 400\n}","responseTime":1781291475567,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /budget/set/(accountId:number) -> 200 has FAILED\nIn scenario \"Set budget limits. Response: OK\"\r\nAPI: POST /budget/set/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"},{"name":" Scenario: POST /budget/set/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":1,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /budget/set/352\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{}","requestTime":1781291475599,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.596867\",\n    \"status\": 400\n}","responseTime":1781291475600,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /budget/set/(accountId:number) -> 200 has FAILED\nIn scenario \"Set budget limits. Response: OK\"\r\nAPI: POST /budget/set/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}],"400":[{"name":" Scenario: POST /budget/set/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":1,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"POST /budget/set/112\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"dailyLimit\": 793.0,\n    \"weeklyLimit\": 258.0,\n    \"monthlyLimit\": 454.0\n}","requestTime":1781291475566,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.5627928\",\n    \"status\": 400\n}","responseTime":1781291475567,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /budget/set/(accountId:number) -> 200 has FAILED\nIn scenario \"Set budget limits. Response: OK\"\r\nAPI: POST /budget/set/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"},{"name":" Scenario: POST /budget/set/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":1,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"POST /budget/set/352\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{}","requestTime":1781291475599,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.596867\",\n    \"status\": 400\n}","responseTime":1781291475600,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /budget/set/(accountId:number) -> 200 has FAILED\nIn scenario \"Set budget limits. Response: OK\"\r\nAPI: POST /budget/set/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}]}},"/expense/add/{accountId}":{"POST":{"200":[{"name":" Scenario: POST /expense/add/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /expense/add/907\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 473.0,\n    \"category\": \"NDXFT\",\n    \"description\": \"HHDMQ\"\n}","requestTime":1781291475494,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.4902325\",\n    \"status\": 400\n}","responseTime":1781291475494,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /expense/add/(accountId:number) -> 200 has FAILED\nIn scenario \"Add expense. Response: OK\"\r\nAPI: POST /expense/add/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"},{"name":" Scenario: POST /expense/add/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /expense/add/232\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 732.0\n}","requestTime":1781291475529,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.5244762\",\n    \"status\": 400\n}","responseTime":1781291475529,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /expense/add/(accountId:number) -> 200 has FAILED\nIn scenario \"Add expense. Response: OK\"\r\nAPI: POST /expense/add/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}],"400":[{"name":" Scenario: POST /expense/add/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"POST /expense/add/907\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 473.0,\n    \"category\": \"NDXFT\",\n    \"description\": \"HHDMQ\"\n}","requestTime":1781291475494,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.4902325\",\n    \"status\": 400\n}","responseTime":1781291475494,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /expense/add/(accountId:number) -> 200 has FAILED\nIn scenario \"Add expense. Response: OK\"\r\nAPI: POST /expense/add/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"},{"name":" Scenario: POST /expense/add/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"POST /expense/add/232\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 732.0\n}","requestTime":1781291475529,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.5244762\",\n    \"status\": 400\n}","responseTime":1781291475529,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /expense/add/(accountId:number) -> 200 has FAILED\nIn scenario \"Add expense. Response: OK\"\r\nAPI: POST /expense/add/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}]}},"/expense/list/{accountId}":{"GET":{"200":[{"name":" Scenario: GET /expense/list/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"NotImplemented","valid":true,"wip":false,"request":"GET /expense/list/422\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: NOT SENT\n\n","requestTime":1781291477357,"response":"200 OK\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nKeep-Alive: timeout=60\nConnection: keep-alive\n\n[]","responseTime":1781291477357,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: GET /expense/list/(accountId:number) -> 200 has FAILED\nIn scenario \"Get all expenses. Response: OK\"\r\nAPI: GET /expense/list/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.HEADERS.Content-Type\n  \n     Contract expected */* but response contained application/json","htmlResult":"Failed"}]}},"/expense/summary/{accountId}":{"GET":{"200":[{"name":" Scenario: GET /expense/summary/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"NotImplemented","valid":true,"wip":false,"request":"GET /expense/summary/146\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: NOT SENT\n\n","requestTime":1781291477322,"response":"200 OK\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nKeep-Alive: timeout=60\nConnection: keep-alive\n\n{\n    \"monthlySpent\": 0,\n    \"weeklySpent\": 0,\n    \"dailySpent\": 0\n}","responseTime":1781291477322,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: GET /expense/summary/(accountId:number) -> 200 has FAILED\nIn scenario \"Get budget summary. Response: OK\"\r\nAPI: GET /expense/summary/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.HEADERS.Content-Type\n  \n     Contract expected */* but response contained application/json\n  \n  >> RESPONSE.BODY.monthlySpent\n  \n     Contract expected JSON object but response contained 0 (number)","htmlResult":"Failed"}]}},"/transaction/deposit/{accountId}":{"POST":{"200":[{"name":" Scenario: POST /transaction/deposit/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /transaction/deposit/939\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 134.0,\n    \"description\": \"JQMIV\",\n    \"toAccountNumber\": \"NUSWI\"\n}","requestTime":1781291475424,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.4213585\",\n    \"status\": 400\n}","responseTime":1781291475424,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /transaction/deposit/(accountId:number) -> 200 has FAILED\nIn scenario \"Deposit money. Response: OK\"\r\nAPI: POST /transaction/deposit/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"},{"name":" Scenario: POST /transaction/deposit/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /transaction/deposit/107\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 342.0\n}","requestTime":1781291475457,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.4540574\",\n    \"status\": 400\n}","responseTime":1781291475457,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /transaction/deposit/(accountId:number) -> 200 has FAILED\nIn scenario \"Deposit money. Response: OK\"\r\nAPI: POST /transaction/deposit/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}],"400":[{"name":" Scenario: POST /transaction/deposit/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"POST /transaction/deposit/939\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 134.0,\n    \"description\": \"JQMIV\",\n    \"toAccountNumber\": \"NUSWI\"\n}","requestTime":1781291475424,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.4213585\",\n    \"status\": 400\n}","responseTime":1781291475424,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /transaction/deposit/(accountId:number) -> 200 has FAILED\nIn scenario \"Deposit money. Response: OK\"\r\nAPI: POST /transaction/deposit/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"},{"name":" Scenario: POST /transaction/deposit/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"POST /transaction/deposit/107\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 342.0\n}","requestTime":1781291475457,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.4540574\",\n    \"status\": 400\n}","responseTime":1781291475457,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /transaction/deposit/(accountId:number) -> 200 has FAILED\nIn scenario \"Deposit money. Response: OK\"\r\nAPI: POST /transaction/deposit/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}]}},"/transaction/history/{accountId}":{"GET":{"200":[{"name":" Scenario: GET /transaction/history/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"NotImplemented","valid":true,"wip":false,"request":"GET /transaction/history/984\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: NOT SENT\n\n","requestTime":1781291477238,"response":"200 OK\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:17 GMT\nKeep-Alive: timeout=60\nConnection: keep-alive\n\n[]","responseTime":1781291477238,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: GET /transaction/history/(accountId:number) -> 200 has FAILED\nIn scenario \"Get transaction history. Response: OK\"\r\nAPI: GET /transaction/history/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.HEADERS.Content-Type\n  \n     Contract expected */* but response contained application/json","htmlResult":"Failed"}]}},"/transaction/transfer/{fromAccountId}":{"POST":{"200":[{"name":" Scenario: POST /transaction/transfer/(fromAccountId:number) -> 200","baseUrl":"http://localhost:8080","duration":1,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /transaction/transfer/613\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 619.0,\n    \"description\": \"NDRLW\",\n    \"toAccountNumber\": \"AQPWT\"\n}","requestTime":1781291475351,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.3478545\",\n    \"status\": 400\n}","responseTime":1781291475352,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /transaction/transfer/(fromAccountId:number) -> 200 has FAILED\nIn scenario \"Transfer money to another account. Response: OK\"\r\nAPI: POST /transaction/transfer/(fromAccountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"},{"name":" Scenario: POST /transaction/transfer/(fromAccountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /transaction/transfer/726\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 499.0\n}","requestTime":1781291475389,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.3858557\",\n    \"status\": 400\n}","responseTime":1781291475389,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /transaction/transfer/(fromAccountId:number) -> 200 has FAILED\nIn scenario \"Transfer money to another account. Response: OK\"\r\nAPI: POST /transaction/transfer/(fromAccountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}],"400":[{"name":" Scenario: POST /transaction/transfer/(fromAccountId:number) -> 200","baseUrl":"http://localhost:8080","duration":1,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"POST /transaction/transfer/613\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 619.0,\n    \"description\": \"NDRLW\",\n    \"toAccountNumber\": \"AQPWT\"\n}","requestTime":1781291475351,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.3478545\",\n    \"status\": 400\n}","responseTime":1781291475352,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /transaction/transfer/(fromAccountId:number) -> 200 has FAILED\nIn scenario \"Transfer money to another account. Response: OK\"\r\nAPI: POST /transaction/transfer/(fromAccountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"},{"name":" Scenario: POST /transaction/transfer/(fromAccountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"POST /transaction/transfer/726\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 499.0\n}","requestTime":1781291475389,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.3858557\",\n    \"status\": 400\n}","responseTime":1781291475389,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /transaction/transfer/(fromAccountId:number) -> 200 has FAILED\nIn scenario \"Transfer money to another account. Response: OK\"\r\nAPI: POST /transaction/transfer/(fromAccountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}]}},"/transaction/withdraw/{accountId}":{"POST":{"200":[{"name":" Scenario: POST /transaction/withdraw/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /transaction/withdraw/283\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 431.0,\n    \"description\": \"WBSCX\",\n    \"toAccountNumber\": \"LDHGK\"\n}","requestTime":1781291475166,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.1373118\",\n    \"status\": 400\n}","responseTime":1781291475166,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /transaction/withdraw/(accountId:number) -> 200 has FAILED\nIn scenario \"Withdraw money. Response: OK\"\r\nAPI: POST /transaction/withdraw/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"},{"name":" Scenario: POST /transaction/withdraw/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":1,"testResult":"NotImplemented","valid":true,"wip":false,"request":"POST /transaction/withdraw/854\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 130.0\n}","requestTime":1781291475308,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.3057295\",\n    \"status\": 400\n}","responseTime":1781291475309,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /transaction/withdraw/(accountId:number) -> 200 has FAILED\nIn scenario \"Withdraw money. Response: OK\"\r\nAPI: POST /transaction/withdraw/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}],"400":[{"name":" Scenario: POST /transaction/withdraw/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":0,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"POST /transaction/withdraw/283\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 431.0,\n    \"description\": \"WBSCX\",\n    \"toAccountNumber\": \"LDHGK\"\n}","requestTime":1781291475166,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.1373118\",\n    \"status\": 400\n}","responseTime":1781291475166,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /transaction/withdraw/(accountId:number) -> 200 has FAILED\nIn scenario \"Withdraw money. Response: OK\"\r\nAPI: POST /transaction/withdraw/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"},{"name":" Scenario: POST /transaction/withdraw/(accountId:number) -> 200","baseUrl":"http://localhost:8080","duration":1,"testResult":"MissingInSpec","valid":true,"wip":false,"request":"POST /transaction/withdraw/854\nAccept-Charset: UTF-8\nAccept: */*\nContent-Type: application/json\n\n{\n    \"amount\": 130.0\n}","requestTime":1781291475308,"response":"400 Bad Request\nVary: Origin\nX-Content-Type-Options: nosniff\nX-XSS-Protection: 0\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\nPragma: no-cache\nExpires: 0\nX-Frame-Options: DENY\nContent-Type: application/json\nTransfer-Encoding: chunked\nDate: Fri, 12 Jun 2026 19:11:15 GMT\nConnection: close\n\n{\n    \"error\": \"Bad Request\",\n    \"message\": \"Account not found!\",\n    \"timestamp\": \"2026-06-13T00:41:15.3057295\",\n    \"status\": 400\n}","responseTime":1781291475309,"specFileName":"C:\\Users\\ramesh\\Documents\\workspace-spring-tools-for-eclipse-5.1.1.RELEASE\\banking-system\\.specmatic\\web\\localhost\\api-docs","details":" Scenario: POST /transaction/withdraw/(accountId:number) -> 200 has FAILED\nIn scenario \"Withdraw money. Response: OK\"\r\nAPI: POST /transaction/withdraw/(accountId:number) -> 200\r\n\r\n  >> RESPONSE.STATUS\n  \n     Expected status 200, actual was status 400","htmlResult":"Failed"}]}}}
+    </script>
+    <script defer type="text/javascript" src="assets/utils.js"></script>
+    <script defer type="text/javascript" src="assets/summaryUpdater.js"></script>
+    <script defer type="text/javascript" src="assets/main.js"></script>
+    <script defer type="text/javascript" src="assets/tableFilter.js"></script>
+</body>
+
+</html>
