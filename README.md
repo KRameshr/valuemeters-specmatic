@@ -1,4 +1,4 @@
-![Specmatic CI](https://github.com/KRameshr/valuemeters-specmatic/actions/workflows/specmatic.yml/badge.svg) at the top of your README.md
+
 # ValueMeters Banking API — Specmatic Contract Testing
 
 A full-stack online banking system with Specmatic contract testing integration. 
