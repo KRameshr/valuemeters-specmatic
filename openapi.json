@@ -4,6 +4,12 @@
     "title": "Banking API",
     "version": "v1.0.0"
   },
+  "servers": [
+    {
+      "url": "http://localhost:9000",
+      "description": "Local server"
+    }
+  ],
   "paths": {
     "/transaction/withdraw/{accountId}": {
       "post": {
@@ -18,7 +24,7 @@
           }
         },
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object" }, "example": { "status": "success" } } } },
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object" } } } },
           "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         }
       }
@@ -33,7 +39,7 @@
           }
         },
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object" }, "example": { "status": "created" } } } },
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object" } } } },
           "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         }
       }
@@ -48,7 +54,7 @@
           }
         },
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object" }, "example": { "token": "abc-123" } } } },
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object" } } } },
           "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         }
       }
@@ -60,7 +66,7 @@
           { "name": "accountId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
         ],
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object" }, "example": { "total": 500.0 } } } },
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object" } } } },
           "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         }
       }
@@ -68,9 +74,28 @@
   },
   "components": {
     "schemas": {
-      "TransactionRequest": { "type": "object", "required": ["amount"], "properties": { "amount": { "type": "number" } } },
-      "RegisterRequest": { "type": "object", "required": ["name", "email", "password"], "properties": { "name": { "type": "string" }, "email": { "type": "string" }, "password": { "type": "string" } } },
-      "LoginRequest": { "type": "object", "required": ["email", "password"], "properties": { "email": { "type": "string" }, "password": { "type": "string" } } },
+      "TransactionRequest": {
+        "type": "object",
+        "required": ["amount"],
+        "properties": { "amount": { "type": "number" } }
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        }
+      },
       "Error": {
         "type": "object",
         "properties": {

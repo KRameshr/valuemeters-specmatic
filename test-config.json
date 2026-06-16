@@ -1,0 +1,27 @@
+{
+  "http-requests": {
+    "POST /transaction/withdraw/{accountId}": {
+      "request": {
+        "path": {
+          "accountId": 106
+        },
+        "body": {
+          "amount": 100.0
+        }
+      }
+    },
+    "POST /auth/register": {
+      "body": {
+        "name": "Test User",
+        "email": "test@example.com",
+        "password": "password123"
+      }
+    },
+    "POST /auth/login": {
+      "body": {
+        "email": "test@example.com",
+        "password": "password123"
+      }
+    }
+  }
+}

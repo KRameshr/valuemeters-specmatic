@@ -3,8 +3,8 @@ package com.banking.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy; 
-import org.springframework.context.annotation.Profile; // ◄── ADDED FOR ENVIRONMENT ISOLATION
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -20,52 +20,50 @@ import com.banking.security.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
-@Profile("!test") 
+@Profile("!test")
 public class SecurityConfig {
 
     @Autowired
     private JwtFilter jwtFilter;
 
     @Autowired
-    @Lazy 
+    @Lazy
     private UserDetailsService userDetailsService;
 
     @Autowired
-    @Lazy 
+    @Lazy
     private PasswordEncoder passwordEncoder;
 
     private static final String[] PUBLIC_URLS = {
-        "/auth/register",
-        "/auth/login",
-        "/swagger-ui/**",
-        "/swagger-ui.html",
-        "/api-docs/**",
-        "/api-docs",
-        "/v3/api-docs/**",
-        "/v3/api-docs"
+        "/auth/register", "/auth/login",
+        "/swagger-ui/**", "/swagger-ui.html",
+        "/api-docs/**", "/api-docs",
+        "/v3/api-docs/**", "/v3/api-docs"
     };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> {})
-            .csrf(csrf -> csrf.disable()) 
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(PUBLIC_URLS).permitAll() 
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+            .cors().and() // Older chain style
+            .csrf().disable()
+            .authorizeRequests() // Older syntax for 2.7.x
+                .antMatchers(PUBLIC_URLS).permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
-            )
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
+            .and()
+            .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-            
+
         return http.build();
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }

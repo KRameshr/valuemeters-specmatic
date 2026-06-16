@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import jakarta.validation.Valid; // Ensure you import this
+import javax.validation.Valid; // Ensure you import this
 import java.util.Map;            // Import for Map to return JSON
 
 import com.banking.dto.LoginRequest;

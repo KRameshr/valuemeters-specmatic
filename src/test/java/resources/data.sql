@@ -1,16 +1,11 @@
--- Updated User: Ensure password is at least 6 characters to satisfy DTO validation
+-- Clean up existing data first if necessary
+DELETE FROM accounts;
+DELETE FROM users;
 
-INSERT INTO users (id, email, password, name) VALUES (1, 'test@example.com', 'password123', 'Test User');
+-- Seed User
+INSERT INTO users (id, email, password, name) 
+VALUES (1, 'test@example.com', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'Test User');
 
--- Accounts covering the IDs Specmatic is testing
-
-INSERT INTO accounts (id, balance, user_id) VALUES (331, 1000.0, 1);
-INSERT INTO accounts (id, balance, user_id) VALUES (207, 1000.0, 1);
-INSERT INTO accounts (id, balance, user_id) VALUES (146, 1000.0, 1);
-INSERT INTO accounts (id, balance, user_id) VALUES (810, 1000.0, 1);
-INSERT INTO accounts (id, balance, user_id) VALUES (723, 1000.0, 1);
-INSERT INTO accounts (id, balance, user_id) VALUES (456, 1000.0, 1);
-INSERT INTO accounts (id, balance, user_id) VALUES (535, 1000.0, 1);
-INSERT INTO accounts (id, balance, user_id) VALUES (805, 1000.0, 1);
-INSERT INTO accounts (id, balance, user_id) VALUES (528, 1000.0, 1);
-INSERT INTO accounts (id, balance, user_id) VALUES (106, 1000.0, 1);
+-- Seed a few "Safe" accounts
+INSERT INTO accounts (id, balance, user_id) VALUES (100, 1000.0, 1);
+INSERT INTO accounts (id, balance, user_id) VALUES (200, 1000.0, 1);
