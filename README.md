@@ -1,6 +1,7 @@
+
 # ValueMeters Banking API — Specmatic Contract Testing
 
-A full-stack online banking system with Specmatic contract testing integration.
+A full-stack online banking system with Specmatic contract testing integration. 
 
 ## Tech Stack
 - Java 17, Spring Boot 2.7.18
