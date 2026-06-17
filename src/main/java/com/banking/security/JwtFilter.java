@@ -25,7 +25,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
 
     @Autowired
-    @Lazy // ◄── CRITICAL: This breaks the circular dependency chain at startup!
+    @Lazy 
     private UserDetailsService userDetailsService;
 
     @Override

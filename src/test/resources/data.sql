@@ -1,7 +1,9 @@
--- Test user (password: Test@1234)
-INSERT IGNORE INTO users (id, name, email, password, role) VALUES 
-(999, 'Test User', 'test@example.com', '$2a$10$WqFsX6BYDOx8mSWCP8S/l.7XON1HNU9ZpdNZEUdLLFilABWASNQqK', 'USER');
+DELETE FROM accounts;
+DELETE FROM users;
 
--- Test account for user 999
-INSERT IGNORE INTO accounts (id, account_number, balance, user_id) VALUES 
-(999, 'ACC999TEST1', 10000.00, 999);
+INSERT INTO users (id, email, password, name)
+VALUES (1, 'test@example.com', '$2a$10$abc...', 'Test User');
+
+-- IMPORTANT: match Specmatic account IDs
+INSERT INTO accounts (id, balance, user_id)
+VALUES (106, 1000.0, 1);
