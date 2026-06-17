@@ -65,5 +65,26 @@ https://krameshr.github.io/valuemeters-specmatic/docs/specmatic-report/index.htm
 | /transaction/withdraw/{accountId} | POST | 50% |
 | /expense/summary/{accountId} | GET | 100% |
 
+## CI/CD Integration
+Contract tests run automatically on every push via GitHub Actions.
+
+CI Workflow: https://github.com/KRameshr/valuemeters-specmatic/actions
+
+## Known Limitations
+The 3 failing tests are due to Specmatic generating random test data 
+that does not match real DB records. Fix requires DB seeding with 
+known test data before running tests.
+
+## Mocking with Specmatic
+Specmatic can also be used as a mock server for the React frontend 
+during development:
+
+```bash
+java -jar specmatic.jar stub
+```
+
+This starts a mock server on port 9000 that returns stub responses 
+based on the OpenAPI spec — no real backend needed.
+
 ## Blog Post
 https://dev.to/krameshr/how-i-integrated-specmatic-contract-testing-into-a-real-banking-api-valuemeters-cak
