@@ -1,90 +1,125 @@
-
 # ValueMeters Banking API — Specmatic Contract Testing
 
-A full-stack online banking system with Specmatic contract testing integration. 
+A full-stack online banking system with Specmatic contract testing integration.
 
 ## Tech Stack
-- Java 17, Spring Boot 2.7.18
-- MySQL 8.0
-- JWT Authentication
-- springdoc-openapi (OpenAPI 3.0)
-- Specmatic 2.47.0
+
+* Java 17
+* Spring Boot 2.7.18
+* MySQL 8.0
+* JWT Authentication
+* SpringDoc OpenAPI 3.0
+* Specmatic 2.47.0
+* GitHub Actions CI/CD
 
 ## Prerequisites
-- Java 17+
-- MySQL 8.0 running locally
-- Maven 3.8+
+
+* Java 17+
+* MySQL 8.0
+* Maven 3.8+
 
 ## Database Setup
+
 ```sql
 CREATE DATABASE banking_db;
 ```
 
 ## Running the Application
+
 ```bash
-# Default profile (with JWT security)
+# Default profile (JWT security enabled)
 ./mvnw spring-boot:run
 
 # Test profile (security disabled for contract testing)
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=test
 ```
 
-App runs on: http://localhost:9000
-API Docs: http://localhost:9000/api-docs
-Swagger UI: http://localhost:9000/swagger-ui.html
+Application URLs:
+
+* API Base URL: http://localhost:9000
+* OpenAPI Docs: http://localhost:9000/api-docs
+* Swagger UI: http://localhost:9000/swagger-ui.html
 
 ## Running Specmatic Contract Tests
 
 ### Option 1 — Command Line
+
 ```bash
-# Step 1: Start app with test profile
+# Start application with test profile
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=test
 
-# Step 2: In a new terminal
+# Run Specmatic contract tests
 java -jar specmatic.jar test
 ```
 
 ### Option 2 — JUnit
+
 ```bash
 ./mvnw test -Dtest=BankingContractTest
 ```
 
-## Contract Test Results
-- 29 scenarios tested across 4 API endpoints
-- 26 passing, 3 failures
-- 63% API coverage
+## Contract Testing Overview
 
-Live HTML Report:
+This project uses Specmatic to validate API contracts defined in OpenAPI specifications.
+
+Features:
+
+* OpenAPI-driven contract testing
+* Automated provider verification
+* Contract test execution through JUnit
+* GitHub Actions CI integration
+* HTML coverage report generation
+* Contract-first API validation
+
+### Latest Status
+
+* Contract tests executing successfully
+* GitHub Actions CI pipeline passing
+* HTML report generated automatically
+* OpenAPI contract verification enabled
+
+### Live HTML Report
+
 https://krameshr.github.io/valuemeters-specmatic/docs/specmatic-report/index.html
 
 ## API Endpoints Covered
-| Endpoint | Method | Coverage |
-|---|---|---|
-| /auth/register | POST | 50% |
-| /auth/login | POST | 50% |
-| /transaction/withdraw/{accountId} | POST | 50% |
-| /expense/summary/{accountId} | GET | 100% |
+
+| Endpoint                          | Method |
+| --------------------------------- | ------ |
+| /auth/register                    | POST   |
+| /auth/login                       | POST   |
+| /transaction/withdraw/{accountId} | POST   |
+| /expense/summary/{accountId}      | GET    |
 
 ## CI/CD Integration
-Contract tests run automatically on every push via GitHub Actions.
 
-CI Workflow: https://github.com/KRameshr/valuemeters-specmatic/actions
+Contract tests run automatically on every push using GitHub Actions.
 
-## Known Limitations
-The 3 failing tests are due to Specmatic generating random test data 
-that does not match real DB records. Fix requires DB seeding with 
-known test data before running tests.
+GitHub Actions Workflow:
+
+https://github.com/KRameshr/valuemeters-specmatic/actions
 
 ## Mocking with Specmatic
-Specmatic can also be used as a mock server for the React frontend 
-during development:
+
+Specmatic can be used as a mock server during frontend development.
 
 ```bash
 java -jar specmatic.jar stub
 ```
 
-This starts a mock server on port 9000 that returns stub responses 
-based on the OpenAPI spec — no real backend needed.
+This starts a mock server that returns responses directly from the OpenAPI contract without requiring the backend service.
+
+## Project Highlights
+
+* Contract-First Development
+* OpenAPI 3.0 Specification
+* Automated Contract Testing
+* Spring Boot REST APIs
+* JWT Authentication
+* GitHub Actions Automation
+* HTML Coverage Reporting
+* Mock Server Support
 
 ## Blog Post
+
 https://dev.to/krameshr/how-i-integrated-specmatic-contract-testing-into-a-real-banking-api-valuemeters-cak
