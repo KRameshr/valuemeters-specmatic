@@ -44,9 +44,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors().and() // Older chain style
+            .cors().and() 
             .csrf().disable()
-            .authorizeRequests() // Older syntax for 2.7.x
+            .authorizeRequests() 
                 .antMatchers(PUBLIC_URLS).permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()

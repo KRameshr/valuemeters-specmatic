@@ -36,12 +36,12 @@ public class JwtUtil {
                 .compact();
     }
 
-    //  Get Email from Token
+    // Email from Token
     public String extractEmail(String token) {
         return getClaims(token).getSubject();
     }
 
-    // Get UserId from Token
+    // UserId from Token
     public Long extractUserId(String token) {
         return ((Number) getClaims(token)
                 .get("userId")).longValue();

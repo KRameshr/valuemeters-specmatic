@@ -15,95 +15,248 @@
       "post": {
         "summary": "Withdraw money",
         "parameters": [
-          { "name": "accountId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/TransactionRequest" } }
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionRequest"
+              }
+            }
           }
         },
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object" } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
         }
       }
     },
+
     "/auth/register": {
       "post": {
         "summary": "Register new user",
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/RegisterRequest" } }
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
           }
         },
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object" } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
         }
       }
     },
+
     "/auth/login": {
       "post": {
         "summary": "Login",
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/LoginRequest" } }
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              },
+              "example": {
+                "email": "test@example.com",
+                "password": "password"
+              }
+            }
           }
         },
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object" } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
         }
       }
     },
+
     "/expense/summary/{accountId}": {
       "get": {
         "summary": "Get budget summary",
         "parameters": [
-          { "name": "accountId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
         ],
         "responses": {
-          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "object" } } } },
-          "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
         }
       }
     }
   },
+
   "components": {
     "schemas": {
       "TransactionRequest": {
         "type": "object",
-        "required": ["amount"],
-        "properties": { "amount": { "type": "number" } }
+        "required": [
+          "amount"
+        ],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "example": 100
+          }
+        }
       },
+
       "RegisterRequest": {
         "type": "object",
-        "required": ["name", "email", "password"],
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
         "properties": {
-          "name": { "type": "string" },
-          "email": { "type": "string" },
-          "password": { "type": "string" }
+          "name": {
+            "type": "string",
+            "example": "Test User"
+          },
+          "email": {
+            "type": "string",
+            "example": "test@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          }
         }
       },
+
       "LoginRequest": {
         "type": "object",
-        "required": ["email", "password"],
+        "required": [
+          "email",
+          "password"
+        ],
         "properties": {
-          "email": { "type": "string" },
-          "password": { "type": "string" }
+          "email": {
+            "type": "string",
+            "example": "test@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          }
         }
       },
+
       "Error": {
         "type": "object",
         "properties": {
-          "timestamp": { "type": "string", "format": "date-time" },
-          "status": { "type": "integer" },
-          "error": { "type": "string" },
-          "message": { "type": "string" },
-          "path": { "type": "string" }
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
         }
       }
     }

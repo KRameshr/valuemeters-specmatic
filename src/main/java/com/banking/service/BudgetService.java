@@ -18,7 +18,7 @@ public class BudgetService {
     @Autowired
     private AccountRepository accountRepository;
 
-    //  Set Budget
+    //  Budget
     public String setBudget(Long accountId, BudgetRequest request) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found!"));
@@ -36,7 +36,7 @@ public class BudgetService {
         return "Budget limits set successfully!";
     }
 
-    // Get Budget
+    // Budget
     public Budget getBudget(Long accountId) {
         return budgetRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new RuntimeException("Budget not set!"));

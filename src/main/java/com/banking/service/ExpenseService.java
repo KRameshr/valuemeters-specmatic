@@ -52,12 +52,12 @@ public class ExpenseService {
         return "Expense added! Remaining balance: ₹" + account.getBalance();
     }
 
-    //  Get All Expenses
+    //   All Expenses
     public List<Expense> getExpenses(Long accountId) {
         return expenseRepository.findByAccountId(accountId);
     }
 
-    // Get Budget Summary
+    //  Budget Summary
     public Map<String, Object> getBudgetSummary(Long accountId) {
         LocalDateTime now = LocalDateTime.now();
 
