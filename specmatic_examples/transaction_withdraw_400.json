@@ -1,0 +1,21 @@
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/transaction/withdraw/1",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "amount": -100
+    }
+  },
+  "http-response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "message": "(string)"
+    }
+  }
+}

@@ -2,3 +2,6 @@ sources:
   - provider: "filesystem"
     test:
       - openapi.json
+
+examples:
+  - specmatic_examples
