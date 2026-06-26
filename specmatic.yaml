@@ -19,4 +19,4 @@ systemUnderTest:
 specmatic:
   settings:
     test:
-      schemaResiliencyTests: none
+      schemaResiliencyTests: all
