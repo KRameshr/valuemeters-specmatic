@@ -48,8 +48,13 @@ public class ExpenseController {
 	@GetMapping("/summary/{accountId}")
 	public ResponseEntity<Map<String, Object>> getSummary(@PathVariable Long accountId) {
 
-		Map<String, Object> summary = expenseService.getBudgetSummary(accountId);
+    if (accountId <= 0) {
+        return ResponseEntity.badRequest()
+                .body(Map.of("message", "Invalid accountId"));
+    }
 
-		return ResponseEntity.ok(summary);
-	}
+    Map<String, Object> summary = expenseService.getBudgetSummary(accountId);
+
+    return ResponseEntity.ok(summary);
+}
 }

@@ -3,18 +3,23 @@ package com.banking.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.banking.config.StrictStringDeserializer;
+
 
 public class RegisterRequest {
 
     @NotBlank(message = "Name is required")
+    @JsonDeserialize(using = StrictStringDeserializer.class)
     private String name;
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
+    @Email(message = "Invalid email")
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters")
+    @JsonDeserialize(using = StrictStringDeserializer.class)
+    @Size(min = 5, message = "Password must be at least 5 characters")
     private String password;
 
     public RegisterRequest() {

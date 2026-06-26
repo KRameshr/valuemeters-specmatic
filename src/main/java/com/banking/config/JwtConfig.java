@@ -44,4 +44,17 @@ public class JwtConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    
+    @Bean
+    public org.springframework.boot.CommandLineRunner generatePassword(
+        PasswordEncoder encoder) {
+
+    return args -> {
+        String hash = encoder.encode("password");
+
+        System.out.println("=================================");
+        System.out.println(hash);
+        System.out.println("=================================");
+    };
+}
 }

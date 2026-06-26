@@ -5,7 +5,7 @@ INSERT INTO users (id, email, password, name)
 VALUES (
 1,
 'test@example.com',
-'$2a$10$7EqJtq98hPqEX7fNZaFWoOHi6xM7QJ7N5K56ZtPcNI0YvrFica8F2',
+'$2a$10$6u3qyarJ2dPSGmpHryVIi.jLEh1f68LSERtIsZ8tS9KFFwQSBogla',
 'Test User'
 );
 
