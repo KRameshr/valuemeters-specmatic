@@ -1,22 +1,21 @@
 {
   "http-request": {
     "method": "POST",
-    "path": "/auth/login",
+    "path": "/transaction/withdraw/1",
     "headers": {
       "Content-Type": "application/json"
     },
     "body": {
-      "email": "test@example.com",
-      "password": "password"
+      "amount": -100
     }
   },
   "http-response": {
-    "status": 200,
+    "status": 400,
     "headers": {
       "Content-Type": "application/json"
     },
     "body": {
-      "token": "(string)"
+      "message": "(string)"
     }
   }
 }

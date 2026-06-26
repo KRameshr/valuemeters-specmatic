@@ -1,5 +1,6 @@
 package com.banking.dto;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -9,6 +10,7 @@ public class RegisterRequest {
     private String name;
 
     @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email")
     private String email;
 
     @NotBlank(message = "Password is required")

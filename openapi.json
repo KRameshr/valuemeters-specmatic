@@ -70,6 +70,24 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RegisterRequest"
+              },
+              "examples": {
+                "success": {
+                  "summary": "Valid Register",
+                  "value": {
+                    "name": "Test User",
+                    "email": "test@example.com",
+                    "password": "password"
+                  }
+                },
+                "invalid": {
+                  "summary": "Invalid Register",
+                  "value": {
+                    "name": "",
+                    "email": "invalid-email",
+                    "password": "123"
+                  }
+                }
               }
             }
           }
@@ -109,9 +127,21 @@
               "schema": {
                 "$ref": "#/components/schemas/LoginRequest"
               },
-              "example": {
-                "email": "test@example.com",
-                "password": "password"
+              "examples": {
+                "success": {
+                  "summary": "Valid Login",
+                  "value": {
+                    "email": "test@example.com",
+                    "password": "password"
+                  }
+                },
+                "invalid": {
+                  "summary": "Invalid Login",
+                  "value": {
+                    "email": "",
+                    "password": ""
+                  }
+                }
               }
             }
           }
@@ -186,9 +216,7 @@
     "schemas": {
       "TransactionRequest": {
         "type": "object",
-        "required": [
-          "amount"
-        ],
+        "required": ["amount"],
         "properties": {
           "amount": {
             "type": "number",
@@ -199,11 +227,7 @@
 
       "RegisterRequest": {
         "type": "object",
-        "required": [
-          "name",
-          "email",
-          "password"
-        ],
+        "required": ["name", "email", "password"],
         "properties": {
           "name": {
             "type": "string",
@@ -211,6 +235,7 @@
           },
           "email": {
             "type": "string",
+            "format": "email",
             "example": "test@example.com"
           },
           "password": {
@@ -222,13 +247,11 @@
 
       "LoginRequest": {
         "type": "object",
-        "required": [
-          "email",
-          "password"
-        ],
+        "required": ["email", "password"],
         "properties": {
           "email": {
             "type": "string",
+            "format": "email",
             "example": "test@example.com"
           },
           "password": {
