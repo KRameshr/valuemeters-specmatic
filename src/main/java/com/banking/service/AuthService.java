@@ -1,7 +1,4 @@
-
-
 package com.banking.service;
-
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -66,12 +63,6 @@ public class AuthService {
     // LOGIN (IMPORTANT FIX)
     public String login(LoginRequest request) {
 
-    System.out.println("LOGIN EMAIL = " +
-            (request != null ? request.getEmail() : "NULL"));
-
-    System.out.println("LOGIN PASSWORD = " +
-            (request != null ? request.getPassword() : "NULL"));
-
     if (request == null
             || request.getEmail() == null
             || request.getPassword() == null) {
@@ -81,7 +72,6 @@ public class AuthService {
     java.util.Optional<User> userOpt =
             userRepository.findByEmail(request.getEmail());
 
-    System.out.println("USER FOUND = " + userOpt.isPresent());
 
     if (!userOpt.isPresent()) {
         throw new IllegalArgumentException("Invalid credentials");
@@ -89,13 +79,9 @@ public class AuthService {
 
     User user = userOpt.get();
 
-    System.out.println("DB PASSWORD = " + user.getPassword());
-
     boolean matches = passwordEncoder.matches(
             request.getPassword(),
             user.getPassword());
-
-    System.out.println("PASSWORD MATCH = " + matches);
 
     if (!matches) {
         throw new IllegalArgumentException("Invalid credentials");
