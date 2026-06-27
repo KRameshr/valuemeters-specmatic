@@ -1,4 +1,7 @@
+
+
 package com.banking.service;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -78,6 +81,7 @@ public class AuthService {
     }
 
     User user = userOpt.get();
+
 
     boolean matches = passwordEncoder.matches(
             request.getPassword(),
