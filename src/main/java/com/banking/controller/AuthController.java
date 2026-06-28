@@ -23,6 +23,10 @@ public class AuthController {
     public ResponseEntity<Object> register(
             @Valid @RequestBody RegisterRequest request) {
 
+        
+        System.out.println("REGISTER CONTROLLER HIT");
+        System.out.println(request.getEmail());        
+
         String response = authService.register(request);
 
         return ResponseEntity.ok(
@@ -34,6 +38,8 @@ public class AuthController {
     public ResponseEntity<Object> login(
             @Valid @RequestBody LoginRequest request) {
 
+        System.out.println("AUTH CONTROLLER LOGIN HIT");
+        System.out.println("Login email: " + request.getEmail());
         String token = authService.login(request);
 
         return ResponseEntity.ok(
