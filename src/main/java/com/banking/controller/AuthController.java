@@ -36,7 +36,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(
-            @Valid @RequestBody LoginRequest request) {
+        @RequestBody LoginRequest request) {
 
         System.out.println("AUTH CONTROLLER LOGIN HIT");
         System.out.println("Login email: " + request.getEmail());

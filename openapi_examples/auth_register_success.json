@@ -1,0 +1,23 @@
+{
+  "http-request": {
+    "method": "POST",
+    "path": "/auth/register",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "name": "Test User",
+      "email": "newuser@example.com",
+      "password": "password"
+    }
+  },
+  "http-response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "message": "(string)"
+    }
+  }
+}

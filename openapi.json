@@ -76,7 +76,7 @@
                   "summary": "Valid Register",
                   "value": {
                     "name": "Test User",
-                    "email": "test@example.com",
+                    "email": "newuser@example.com",
                     "password": "password"
                   }
                 },
@@ -235,7 +235,6 @@
           },
           "email": {
             "type": "string",
-            "format": "email",
             "example": "test@example.com"
           },
           "password": {
@@ -251,7 +250,6 @@
         "properties": {
           "email": {
             "type": "string",
-            "format": "email",
             "example": "test@example.com"
           },
           "password": {
