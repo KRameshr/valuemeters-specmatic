@@ -47,6 +47,11 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
         <!-- DB -->
         <dependency>
             <groupId>com.mysql</groupId>
@@ -112,7 +117,7 @@
         <dependency>
             <groupId>io.specmatic</groupId>
             <artifactId>junit5-support</artifactId>
-            <version>2.47.0</version>
+            <version>2.48.0</version>
             <scope>test</scope>
         </dependency>
 

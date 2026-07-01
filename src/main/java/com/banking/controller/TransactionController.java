@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.banking.dto.TransactionRequest;
+import com.banking.dto.TransferRequest;
 import com.banking.model.Transaction;
 import com.banking.service.TransactionService;
 
@@ -31,15 +32,15 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    //  DEPOSIT 
+    //  DEPOSIT
     @Operation(summary = "Deposit money")
     @PostMapping("/deposit/{accountId}")
     public ResponseEntity<Object> deposit(
             @PathVariable String accountId,
             @Valid @RequestBody TransactionRequest request) {
 
-    	  System.out.println("WITHDRAW ACCOUNT ID = " + accountId);
-    	  System.out.println("WITHDRAW AMOUNT = " + request.getAmount());
+          System.out.println("WITHDRAW ACCOUNT ID = " + accountId);
+          System.out.println("WITHDRAW AMOUNT = " + request.getAmount());
 
         Long id = parseAccountId(accountId);
         if (id == null) {
@@ -47,7 +48,8 @@ public class TransactionController {
                     .body(Map.of("message", "Invalid accountId"));
         }
 
-        return ResponseEntity.ok(transactionService.deposit(id, request));
+        String response = transactionService.deposit(id, request);
+        return ResponseEntity.ok(Map.of("message", response));
     }
 
     // WITHDRAW
@@ -81,7 +83,7 @@ public class TransactionController {
     @PostMapping("/transfer/{fromAccountId}")
     public ResponseEntity<Object> transfer(
             @PathVariable String fromAccountId,
-            @Valid @RequestBody TransactionRequest request) {
+            @Valid @RequestBody TransferRequest request) {
 
         Long id = parseAccountId(fromAccountId);
         if (id == null) {
@@ -89,10 +91,11 @@ public class TransactionController {
                     .body(Map.of("message", "Invalid accountId"));
         }
 
-        return ResponseEntity.ok(transactionService.transfer(id, request));
+        String response = transactionService.transfer(id, request);
+        return ResponseEntity.ok(Map.of("message", response));
     }
 
-    // HISTORY 
+    // HISTORY
     @Operation(summary = "Get transaction history")
     @GetMapping("/history/{accountId}")
     public ResponseEntity<Object> getHistory(@PathVariable String accountId) {
@@ -107,7 +110,7 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
 
-    // SAFE PARSER 
+    // SAFE PARSER
     private Long parseAccountId(String accountId) {
         try {
             return Long.parseLong(accountId);

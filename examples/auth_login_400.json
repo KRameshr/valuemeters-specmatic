@@ -6,17 +6,17 @@
       "Content-Type": "application/json"
     },
     "body": {
-      "email": "test@example.com",
-      "password": "password"
+      "email": "",
+      "password": ""
     }
   },
   "http-response": {
-    "status": 200,
+    "status": 400,
     "headers": {
       "Content-Type": "application/json"
     },
     "body": {
-      "token": "(string)"
+      "message": "(string)"
     }
   }
 }

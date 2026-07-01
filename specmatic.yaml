@@ -15,8 +15,19 @@ systemUnderTest:
       openapi:
         type: test
         baseUrl: "http://localhost:9000"
+        actuatorUrl: "http://localhost:9000/actuator/mappings"
+        filter: "PATH!='/api-docs,/swagger-ui'"
+    data:
+      examples:
+        - directories:
+            - examples
 
 specmatic:
   settings:
     test:
       schemaResiliencyTests: all
+  governance:
+    successCriteria:
+      maxMissedOperationsInSpec: 0
+      minCoveragePercentage: 100
+      enforce: true

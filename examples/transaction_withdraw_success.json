@@ -1,0 +1,22 @@
+{
+  "partial": {
+    "http-request": {
+      "path": "/transaction/withdraw/1",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "amount": 10.0
+      }
+    },
+    "http-response": {
+      "status": 200,
+      "body": {},
+      "status-text": "OK",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  }
+}

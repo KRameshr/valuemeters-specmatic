@@ -1,0 +1,13 @@
+{
+  "http-request": {
+    "path": "/transaction/deposit/1",
+    "method": "POST",
+    "headers": { "Content-Type": "application/json" },
+    "body": { "amount": -100 }
+  },
+  "http-response": {
+    "status": 400,
+    "body": { "message": "(string)" },
+    "headers": { "Content-Type": "application/json" }
+  }
+}

@@ -1,12 +1,13 @@
 {
   "http-request": {
     "method": "POST",
-    "path": "/auth/login",
+    "path": "/auth/register",
     "headers": {
       "Content-Type": "application/json"
     },
     "body": {
-      "email": "test@example.com",
+      "name": "Test User",
+      "email": "newuser@example.com",
       "password": "password"
     }
   },
@@ -16,7 +17,7 @@
       "Content-Type": "application/json"
     },
     "body": {
-      "token": "(string)"
+      "message": "(string)"
     }
   }
 }

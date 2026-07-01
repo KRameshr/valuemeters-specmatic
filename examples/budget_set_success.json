@@ -1,0 +1,24 @@
+{
+  "partial": {
+    "http-request": {
+      "path": "/budget/set/1",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "dailyLimit": 100.0,
+        "weeklyLimit": 500.0,
+        "monthlyLimit": 2000.0
+      }
+    },
+    "http-response": {
+      "status": 200,
+      "body": {},
+      "status-text": "OK",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  }
+}

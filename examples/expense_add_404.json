@@ -1,0 +1,13 @@
+{
+  "http-request": {
+    "path": "/expense/add/9999",
+    "method": "POST",
+    "headers": { "Content-Type": "application/json" },
+    "body": { "amount": 10, "category": "FOOD" }
+  },
+  "http-response": {
+    "status": 404,
+    "body": { "message": "(string)" },
+    "headers": { "Content-Type": "application/json" }
+  }
+}

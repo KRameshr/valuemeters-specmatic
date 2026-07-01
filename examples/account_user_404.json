@@ -1,0 +1,8 @@
+{
+  "http-request": { "path": "/account/user/9999", "method": "GET" },
+  "http-response": {
+    "status": 404,
+    "body": { "message": "(string)" },
+    "headers": { "Content-Type": "application/json" }
+  }
+}

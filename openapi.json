@@ -1,16 +1,179 @@
 {
   "openapi": "3.0.1",
-  "info": {
-    "title": "Banking API",
-    "version": "v1.0.0"
-  },
+  "info": { "title": "Banking API", "version": "v1.0.0" },
   "servers": [
-    {
-      "url": "http://localhost:9000",
-      "description": "Local server"
-    }
+    { "url": "http://localhost:9000", "description": "Local server" }
   ],
   "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RegisterRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/user/{userId}": {
+      "get": {
+        "summary": "Get account by user ID",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{accountNumber}": {
+      "get": {
+        "summary": "Get account by account number",
+        "parameters": [
+          {
+            "name": "accountNumber",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/deposit/{accountId}": {
+      "post": {
+        "summary": "Deposit money",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TransactionRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
     "/transaction/withdraw/{accountId}": {
       "post": {
         "summary": "Withdraw money",
@@ -19,20 +182,14 @@
             "name": "accountId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            },
-            "example": 1
+            "schema": { "type": "integer", "format": "int64" }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TransactionRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/TransactionRequest" }
             }
           }
         },
@@ -40,55 +197,44 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           },
           "400": {
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
               }
             }
           }
         }
       }
     },
-
-    "/auth/register": {
+    "/transaction/transfer/{fromAccountId}": {
       "post": {
-        "summary": "Register new user",
+        "summary": "Transfer money",
+        "parameters": [
+          {
+            "name": "fromAccountId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
-              },
-              "examples": {
-                "success": {
-                  "summary": "Valid Register",
-                  "value": {
-                    "name": "Test User",
-                    "email": "newuser@example.com",
-                    "password": "password"
-                  }
-                },
-                "invalid": {
-                  "summary": "Invalid Register",
-                  "value": {
-                    "name": "",
-                    "email": "invalid-email",
-                    "password": "123"
-                  }
-                }
-              }
+              "schema": { "$ref": "#/components/schemas/TransferRequest" }
             }
           }
         },
@@ -96,10 +242,45 @@
           "200": {
             "description": "OK",
             "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
               "application/json": {
-                "schema": {
-                  "type": "object"
-                }
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/history/{accountId}": {
+      "get": {
+        "summary": "Get transaction history",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "type": "object" } }
               }
             }
           },
@@ -107,42 +288,29 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                "schema": { "$ref": "#/components/schemas/Error" }
               }
             }
           }
         }
       }
     },
-
-    "/auth/login": {
+    "/expense/add/{accountId}": {
       "post": {
-        "summary": "Login",
+        "summary": "Add expense",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              },
-              "examples": {
-                "success": {
-                  "summary": "Valid Login",
-                  "value": {
-                    "email": "test@example.com",
-                    "password": "password"
-                  }
-                },
-                "invalid": {
-                  "summary": "Invalid Login",
-                  "value": {
-                    "email": "",
-                    "password": ""
-                  }
-                }
-              }
+              "schema": { "$ref": "#/components/schemas/ExpenseRequest" }
             }
           }
         },
@@ -150,10 +318,45 @@
           "200": {
             "description": "OK",
             "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
               "application/json": {
-                "schema": {
-                  "type": "object"
-                }
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expense/list/{accountId}": {
+      "get": {
+        "summary": "Get all expenses",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "type": "object" } }
               }
             }
           },
@@ -161,16 +364,13 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                "schema": { "$ref": "#/components/schemas/Error" }
               }
             }
           }
         }
       }
     },
-
     "/expense/summary/{accountId}": {
       "get": {
         "summary": "Get budget summary",
@@ -179,31 +379,95 @@
             "name": "accountId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            },
-            "example": 1
+            "schema": { "type": "integer", "format": "int64" }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
+              "application/json": { "schema": { "type": "object" } }
             }
           },
           "400": {
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/budget/set/{accountId}": {
+      "post": {
+        "summary": "Set budget limits",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/BudgetRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/budget/get/{accountId}": {
+      "get": {
+        "summary": "Get budget limits",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
               }
             }
           }
@@ -211,73 +475,65 @@
       }
     }
   },
-
   "components": {
     "schemas": {
       "TransactionRequest": {
         "type": "object",
         "required": ["amount"],
         "properties": {
-          "amount": {
-            "type": "number",
-            "example": 100
-          }
+          "amount": { "type": "number", "example": 100 }
         }
       },
-
+      "TransferRequest": {
+        "type": "object",
+        "required": ["amount", "toAccountNumber"],
+        "properties": {
+          "amount": { "type": "number", "example": 100 },
+          "toAccountNumber": { "type": "string", "example": "ACC000002" }
+        }
+      },
       "RegisterRequest": {
         "type": "object",
         "required": ["name", "email", "password"],
         "properties": {
-          "name": {
-            "type": "string",
-            "example": "Test User"
-          },
-          "email": {
-            "type": "string",
-            "example": "test@example.com"
-          },
-          "password": {
-            "type": "string",
-            "example": "password"
-          }
+          "name": { "type": "string", "example": "Test User" },
+          "email": { "type": "string", "example": "test@example.com" },
+          "password": { "type": "string", "example": "password" }
         }
       },
-
       "LoginRequest": {
         "type": "object",
         "required": ["email", "password"],
         "properties": {
-          "email": {
-            "type": "string",
-            "example": "test@example.com"
-          },
-          "password": {
-            "type": "string",
-            "example": "password"
-          }
+          "email": { "type": "string", "example": "test@example.com" },
+          "password": { "type": "string", "example": "password" }
         }
       },
-
+      "ExpenseRequest": {
+        "type": "object",
+        "required": ["amount", "category"],
+        "properties": {
+          "amount": { "type": "number", "example": 50.0 },
+          "category": { "type": "string", "example": "Food" }
+        }
+      },
+      "BudgetRequest": {
+        "type": "object",
+        "required": ["dailyLimit", "weeklyLimit", "monthlyLimit"],
+        "properties": {
+          "dailyLimit": { "type": "number", "example": 100.0 },
+          "weeklyLimit": { "type": "number", "example": 500.0 },
+          "monthlyLimit": { "type": "number", "example": 2000.0 }
+        }
+      },
       "Error": {
         "type": "object",
         "properties": {
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "status": {
-            "type": "integer"
-          },
-          "error": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          }
+          "timestamp": { "type": "string", "format": "date-time" },
+          "status": { "type": "integer" },
+          "error": { "type": "string" },
+          "message": { "type": "string" },
+          "path": { "type": "string" }
         }
       }
     }

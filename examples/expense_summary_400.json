@@ -1,14 +1,7 @@
 {
   "http-request": {
-    "method": "POST",
-    "path": "/auth/login",
-    "headers": {
-      "Content-Type": "application/json"
-    },
-    "body": {
-      "email": "",
-      "password": ""
-    }
+    "method": "GET",
+    "path": "/expense/summary/0"
   },
   "http-response": {
     "status": 400,

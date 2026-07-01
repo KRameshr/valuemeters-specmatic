@@ -3,6 +3,7 @@ package com.banking.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.banking.exception.AccountNotFoundException;
 import com.banking.model.Account;
 import com.banking.repo.AccountRepository;
 
@@ -12,15 +13,13 @@ public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    //  Account by User ID
     public Account getAccountByUserId(Long userId) {
         return accountRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Account not found!"));
+                .orElseThrow(() -> new AccountNotFoundException("Account not found for user: " + userId));
     }
 
-    //  Account by Account Number
     public Account getAccountByNumber(String accountNumber) {
         return accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new RuntimeException("Account not found!"));
+                .orElseThrow(() -> new AccountNotFoundException("Account not found: " + accountNumber));
     }
 }

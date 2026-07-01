@@ -15,46 +15,36 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 
-
 @RestController
 @RequestMapping("/expense")
 @Tag(name = "Expense", description = "Expense management APIs")
 public class ExpenseController {
 
-	@Autowired
-	private ExpenseService expenseService;
+    @Autowired
+    private ExpenseService expenseService;
 
-	@Operation(summary = "Add expense")
-	@PostMapping("/add/{accountId}")
-	public ResponseEntity<String> addExpense(@PathVariable Long accountId, @Valid @RequestBody ExpenseRequest request) {
-
-		String response = expenseService.addExpense(accountId, request);
-
-		return ResponseEntity.ok(response);
-	}
-
-	
-	@Operation(summary = "Get all expenses")
-	@GetMapping("/list/{accountId}")
-	public ResponseEntity<List<Expense>> getExpenses(@PathVariable Long accountId) {
-
-		List<Expense> expenses = expenseService.getExpenses(accountId);
-
-		return ResponseEntity.ok(expenses);
-	}
-
-	
-	@Operation(summary = "Get budget summary")
-	@GetMapping("/summary/{accountId}")
-	public ResponseEntity<Map<String, Object>> getSummary(@PathVariable Long accountId) {
-
-    if (accountId <= 0) {
-        return ResponseEntity.badRequest()
-                .body(Map.of("message", "Invalid accountId"));
+    @Operation(summary = "Add expense")
+    @PostMapping("/add/{accountId}")
+    public ResponseEntity<Object> addExpense(@PathVariable Long accountId, @Valid @RequestBody ExpenseRequest request) {
+        String response = expenseService.addExpense(accountId, request);
+        return ResponseEntity.ok(Map.of("message", response));
     }
 
-    Map<String, Object> summary = expenseService.getBudgetSummary(accountId);
+    @Operation(summary = "Get all expenses")
+    @GetMapping("/list/{accountId}")
+    public ResponseEntity<Object> getExpenses(@PathVariable Long accountId) {
+        List<Expense> expenses = expenseService.getExpenses(accountId);
+        return ResponseEntity.ok(expenses);
+    }
 
-    return ResponseEntity.ok(summary);
-}
+    @Operation(summary = "Get budget summary")
+    @GetMapping("/summary/{accountId}")
+    public ResponseEntity<Object> getSummary(@PathVariable Long accountId) {
+        if (accountId <= 0) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "Invalid accountId"));
+        }
+        Map<String, Object> summary = expenseService.getBudgetSummary(accountId);
+        return ResponseEntity.ok(summary);
+    }
 }
